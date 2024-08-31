@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -46,12 +47,12 @@ public class login_activity extends AppCompatActivity {
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
-        mAuth= FirebaseAuth.getInstance();
-        progress=findViewById(R.id.progressbar);
-        editTextUsername=findViewById(R.id.email);
-        editTextPassword=findViewById(R.id.password);
-        loginBtn=findViewById(R.id.loginButton);
-        textView=findViewById(R.id.signupText);
+        mAuth = FirebaseAuth.getInstance();
+        progress = findViewById(R.id.progressbar);
+        editTextUsername = findViewById(R.id.email);
+        editTextPassword = findViewById(R.id.password);
+        loginBtn = findViewById(R.id.loginButton);
+        textView = findViewById(R.id.signupText);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,17 +66,15 @@ public class login_activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 progress.setVisibility(View.VISIBLE);
-                String email,password;
-                email=String.valueOf(editTextUsername.getText());
-                password=String.valueOf(editTextPassword.getText());
+                String email, password;
+                email = String.valueOf(editTextUsername.getText());
+                password = String.valueOf(editTextPassword.getText());
 
-                if(TextUtils.isEmpty(email))
-                {
-                    Toast.makeText(login_activity.this, "Emter the email first!!", Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(email)) {
+                    Toast.makeText(login_activity.this, "Enter the email first!!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(TextUtils.isEmpty(password))
-                {
+                if (TextUtils.isEmpty(password)) {
                     Toast.makeText(login_activity.this, "Enter a valid Password!!", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -85,22 +84,27 @@ public class login_activity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 progress.setVisibility(View.GONE);
                                 if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Toast.makeText(login_activity.this, "Authentication Successful.",
-                                            Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                    startActivity(intent);
+                                    // Check if the profile is completed
+                                    SharedPreferences preferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+                                    boolean isProfileCompleted = preferences.getBoolean("profile_completed", false);
+
+                                    if (isProfileCompleted) {
+                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                        startActivity(intent);
+                                    } else {
+                                        Intent intent = new Intent(getApplicationContext(), profileDetails.class);
+                                        startActivity(intent);
+                                    }
                                     finish();
                                 } else {
-                                    // If sign in fails, display a message to the user.
-
-                                    Toast.makeText(login_activity.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(login_activity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
             }
-        });    }
+        });
+
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
