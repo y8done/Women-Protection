@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/loginbkg"
+    tools:context=".ProfileActivity">
+
+    <!-- Profile Card View -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="20dp"
+        android:background="@drawable/custom_edittext">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp">
+
+            <!-- Profile Header -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profileImage"
+                app:shapeAppearanceOverlay="@style/CircularShape"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/participant"
+
+                android:scaleType="centerCrop"
+                />
+
+            <TextView
+                android:id="@+id/fullNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profileImage"
+                android:layout_centerHorizontal="true"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="Full Name" />
+
+            <!-- Basic Details Section -->
+            <TextView
+                android:id="@+id/basicDetailsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fullNameText"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="Basic Details" />
+
+
+
+            <TextView
+                android:id="@+id/emailText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/basicDetailsTitle"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="16dp"
+                android:textSize="14sp"
+                android:text="Email: user@example.com" />
+
+            <TextView
+                android:id="@+id/phoneNumberText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/emailText"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="16dp"
+                android:textSize="14sp"
+                android:text="Phone Number: +1234567890" />
+
+            <TextView
+                android:id="@+id/birthdateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/phoneNumberText"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="16dp"
+                android:textSize="14sp"
+                android:text="Birthdate: YYYY/MM/DD" />
+
+            <TextView
+                android:id="@+id/genderText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/birthdateText"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="16dp"
+                android:textSize="14sp"
+                android:text="Gender: Gender" />
+
+            <!-- Emergency Contacts Section -->
+            <TextView
+                android:id="@+id/emergencyContactsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/genderText"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="Emergency Contacts" />
+
+            <TextView
+                android:id="@+id/emergencyContact1Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/emergencyContactsTitle"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="16dp"
+                android:textSize="14sp"
+                android:text="Contact 1: Phone Number" />
+
+            <TextView
+                android:id="@+id/emergencyContact2Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/emergencyContact1Text"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="16dp"
+                android:textSize="14sp"
+                android:text="Contact 2: Phone Number" />
+
+            <TextView
+                android:id="@+id/emergencyContact3Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/emergencyContact2Text"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="16dp"
+                android:textSize="14sp"
+                android:text="Contact 3: Phone Number" />
+
+            <!-- Edit Button -->
+            <Button
+                android:id="@+id/editButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/emergencyContact3Text"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true"
+                android:text="Edit Details"
+                android:textSize="16sp"
+                android:backgroundTint="@color/purple"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="?android:attr/windowBackground"
+        app:menu="@menu/bottom_navigation_menu"
+        app:labelVisibilityMode="labeled"
+        app:itemIconTint="@color/colorAccent"
+        app:itemTextColor="@color/colorAccent" />
+</RelativeLayout>

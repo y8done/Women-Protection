@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Emergency Contacts"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/black"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Please enter up to three emergency contact numbers. These numbers will be used to notify your emergency contacts in case of an alert."
+        android:textSize="16sp"
+        android:textColor="@color/gray"
+        android:layout_marginBottom="24dp"
+        />
+
+    <EditText
+        android:id="@+id/contact1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter primary emergency contact"
+        android:inputType="phone"
+        android:layout_marginBottom="16dp"
+        android:padding="12dp"
+        android:background="@drawable/custom_edittext"/>
+
+
+    <EditText
+        android:id="@+id/contact2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter secondary emergency contact (optional)"
+        android:inputType="phone"
+        android:layout_marginBottom="16dp"
+        android:padding="12dp"
+        android:background="@drawable/custom_edittext"/>
+
+    <EditText
+        android:id="@+id/contact3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter tertiary emergency contact (optional)"
+        android:inputType="phone"
+        android:layout_marginBottom="24dp"
+        android:padding="12dp"
+        android:background="@drawable/custom_edittext"/>
+
+
+    <Button
+        android:id="@+id/saveContactsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Contacts"
+        android:textSize="18sp"
+        android:backgroundTint="@color/purple"
+        android:textColor="@color/white"
+        android:padding="12dp"/>
+</LinearLayout>

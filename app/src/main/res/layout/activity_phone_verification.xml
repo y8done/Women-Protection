@@ -1,0 +1,98 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Heading -->
+    <TextView
+        android:id="@+id/heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone Number Verification"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp" />
+
+    <!-- Country Code EditText -->
+    <EditText
+        android:id="@+id/countryCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/heading"
+        android:layout_marginTop="24dp"
+        android:hint="Code"
+        android:inputType="phone"
+        android:maxLength="3"
+        android:padding="12dp"
+        android:background="@drawable/custom_edittext"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="8dp"/>
+
+    <!-- Phone Number EditText -->
+    <EditText
+        android:id="@+id/phoneNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/countryCode"
+        android:layout_marginTop="8dp"
+        android:hint="Enter phone number"
+        android:inputType="phone"
+        android:maxLength="10"
+        android:padding="12dp"
+        android:background="@drawable/custom_edittext"
+        android:textSize="16sp" />
+
+    <!-- Send OTP Button -->
+    <Button
+        android:id="@+id/sendOtpButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/phoneNumber"
+        android:layout_marginTop="16dp"
+        android:text="Send OTP"
+        android:textSize="16sp"
+        android:background="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        android:padding="12dp" />
+
+    <!-- OTP Code EditText -->
+    <EditText
+        android:id="@+id/otpCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sendOtpButton"
+        android:layout_marginTop="32dp"
+        android:hint="Enter OTP"
+        android:inputType="number"
+        android:maxLength="6"
+        android:visibility="gone"
+        android:padding="12dp"
+        android:background="@drawable/custom_edittext"
+        android:textSize="16sp" />
+
+    <!-- Verify OTP Button -->
+    <Button
+        android:id="@+id/verifyOtpButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/otpCode"
+        android:layout_marginTop="16dp"
+        android:text="Verify OTP"
+        android:textSize="16sp"
+        android:background="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        android:padding="12dp"
+        android:visibility="gone" />
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+</RelativeLayout>
