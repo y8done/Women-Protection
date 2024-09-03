@@ -17,6 +17,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Objects;
+
 public class EmergencyContactsActivity extends AppCompatActivity {
 
     private EditText contact1, contact2, contact3;
@@ -33,7 +35,11 @@ public class EmergencyContactsActivity extends AppCompatActivity {
         contact3 = findViewById(R.id.contact3);
         saveContactsButton = findViewById(R.id.saveContactsButton);
 
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        // Retrieve the UID of the current user authenticated via email/password
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String uid = auth.getCurrentUser().getUid();
+
+        // Initialize database reference using the correct UID
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid);
 
         saveContactsButton.setOnClickListener(new View.OnClickListener() {
@@ -43,9 +49,10 @@ public class EmergencyContactsActivity extends AppCompatActivity {
             }
         });
 
-        // Optionally, check if profile is already completed
+        // Optionally, check if the profile is already completed
         checkProfileCompletion();
     }
+
 
     private void saveContacts() {
         String contact1Text = contact1.getText().toString().trim();
@@ -97,6 +104,8 @@ public class EmergencyContactsActivity extends AppCompatActivity {
         if (isProfileCompleted) {
             // Profile is already completed, handle accordingly
             // You can redirect the user or disable the UI elements as needed
+            startActivity(new Intent(EmergencyContactsActivity.this, MainActivity.class));
+            finish();
         }
     }
 }

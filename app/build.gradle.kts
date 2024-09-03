@@ -46,7 +46,18 @@ repositories {
         url = uri("https://maven.mapmyindia.com/repository/mapmyindia/")
     }
 }
+allprojects {
+    repositories {
 
+        maven {
+            url = uri("https://maven.mappls.com/repository/mappls/")
+        }
+    }
+}
+repositories {
+    maven {
+        url=uri("https://maven.mappls.com'")}
+}
 dependencies {
 
 
@@ -54,11 +65,16 @@ dependencies {
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.0")
     implementation ("com.mapmyindia.sdk:mapmyindia-android-sdk:7.0.3")
+// In your app's build.gradle
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
     implementation("com.google.android.gms:play-services-auth-api-phone:18.1.0")
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.activity:activity-ktx:1.6.0")
     implementation("androidx.fragment:fragment-ktx:1.5.5")
+    implementation ("com.mappls.sdk:mappls-android-sdk:8.0.0")
+
     implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("androidx.appcompat:appcompat:1.6.1")

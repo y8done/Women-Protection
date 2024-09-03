@@ -21,7 +21,6 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -32,6 +31,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WomenProtection"
         tools:targetApi="31">
+        <activity
+            android:name=".HotspotMapActivity"
+            android:exported="false" />
         <activity
             android:name=".EditProfileActivity"
             android:exported="false" />
@@ -47,9 +49,7 @@
         <activity
             android:name=".location_sharing"
             android:exported="false" />
-        <activity
-            android:name=".MainActivity2"
-            android:exported="false" />
+
         <activity
             android:name=".profileDetails"
             android:exported="false" />

@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imageView;
     private DatabaseReference databaseReference;
     private Button shareMyLocationbtn;
-
+    private ImageView hotspotsView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
         shareMyLocationbtn = findViewById(R.id.button);
         imageView = findViewById(R.id.imageView);
-
+        hotspotsView= findViewById(R.id.imageView3);
         // Assuming you have the current user's UID from FirebaseAuth
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -93,6 +93,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, location_sharing.class);
+                startActivity(intent);
+            }
+        });
+        hotspotsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, HotspotMapActivity.class);
                 startActivity(intent);
             }
         });

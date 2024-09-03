@@ -108,6 +108,7 @@ public class phone_verification extends AppCompatActivity {
                 @Override
                 public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
                     progressBar.setVisibility(View.GONE);
+                    linkPhoneNumber(credential); // Automatically verify and link the phone number
                 }
 
                 @Override
@@ -127,34 +128,45 @@ public class phone_verification extends AppCompatActivity {
             };
 
     private void verifyCode(String code) {
-        FirebaseUser user = mAuth.getCurrentUser();
-        progressBar.setVisibility(View.VISIBLE);
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-
-                        if (user != null) {
-                            // Save phone number to Realtime Database
-                            String phoneNumber = "+" + countryCode.getText().toString().trim() + this.phoneNumber.getText().toString().trim();
-                            usersDatabaseRef.child(user.getUid()).child("phoneNumber").setValue(phoneNumber)
-                                    .addOnCompleteListener(dbTask -> {
-                                        progressBar.setVisibility(View.GONE);
-                                        if (dbTask.isSuccessful()) {
-                                            Toast.makeText(phone_verification.this, "OTP verified and phone number saved successfully!", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(phone_verification.this, EmergencyContactsActivity.class));
-                                            finish();
-                                        } else {
-                                            Toast.makeText(phone_verification.this, "Failed to save phone number: " + dbTask.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                        }
-                                    });
-                        }
-                    } else {
-                        progressBar.setVisibility(View.GONE);
-                        Toast.makeText(phone_verification.this, "OTP verification failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
+        linkPhoneNumber(credential);
     }
+
+    private void linkPhoneNumber(PhoneAuthCredential credential) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            progressBar.setVisibility(View.VISIBLE);
+            user.linkWithCredential(credential)
+                    .addOnCompleteListener(this, task -> {
+                        progressBar.setVisibility(View.GONE);
+                        if (task.isSuccessful()) {
+                            // Phone number linked to existing user account
+                            String phoneNumber = "+" + countryCode.getText().toString().trim() + this.phoneNumber.getText().toString().trim();
+                            savePhoneNumberToDatabase(phoneNumber);
+                        } else {
+                            // Handle error, such as the phone number being used by another account
+                            Toast.makeText(phone_verification.this, "Phone number verification failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }
+    }
+
+    private void savePhoneNumberToDatabase(String phoneNumber) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            usersDatabaseRef.child(user.getUid()).child("phoneNumber").setValue(phoneNumber)
+                    .addOnCompleteListener(dbTask -> {
+                        if (dbTask.isSuccessful()) {
+                            Toast.makeText(phone_verification.this, "OTP verified and phone number saved successfully!", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(phone_verification.this, EmergencyContactsActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(phone_verification.this, "Failed to save phone number: " + dbTask.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }
+    }
+
     private void checkProfileCompletion() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
@@ -180,7 +192,7 @@ public class phone_verification extends AppCompatActivity {
             });
         }
     }
-    @Override
+
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
