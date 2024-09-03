@@ -82,17 +82,21 @@ public class SignupActivity extends AppCompatActivity {
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     if (user != null) {
                                         String userId = user.getUid();
-                                        // Store only email initially
+                                        // Store email and profile completed flag
                                         Map<String, Object> userData = new HashMap<>();
                                         userData.put("email", email);
+                                        userData.put("profile_completed", false);  // Set profileCompleted to false
                                         myRef.child(userId).setValue(userData);
+                                        Intent intent = new Intent(SignupActivity.this, login_activity.class);
+                                        startActivity(intent);
+                                        finish();  // Ensure the current activity is finished
                                     }
                                 } else {
                                     Toast.makeText(SignupActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                                 }
+                                progress.setVisibility(View.GONE);
                             }
                         });
-
             }
         });
     }

@@ -59,25 +59,13 @@
                 android:textColor="@color/black"
                 android:textColorHighlight="@color/cardview_dark_background"/>
 
-            <EditText
-                android:id="@+id/contact"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@id/birthdate"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/custom_edittext"
-                android:drawablePadding="8dp"
-                android:hint="Contact"
-                android:inputType="phone"
-                android:padding="8dp"
-                android:textColor="@color/black"
-                android:textColorHighlight="@color/cardview_dark_background"/>
+
 
             <TextView
                 android:id="@+id/genderLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/contact"
+                android:layout_below="@id/birthdate"
                 android:layout_marginTop="20dp"
                 android:text="Gender"
                 android:textSize="16sp"
@@ -157,7 +145,7 @@
                 android:layout_below="@id/Llayout"
                 android:layout_marginTop="20dp"
                 android:layout_centerHorizontal="true"
-                android:visibility="visible"/> <!-- Initially hidden -->
+                android:visibility="gone"/> <!-- Initially hidden -->
 
             <Button
                 android:id="@+id/submitDetailsButton"

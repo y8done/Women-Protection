@@ -25,8 +25,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -41,7 +44,6 @@ public class profileDetails extends AppCompatActivity {
     private static final int GALLERY_REQUEST_CODE = 101;
     private EditText birthdateEditText;
     private EditText fullnameEditText;
-    private EditText contactEditText;
     private RadioGroup genderGroup;
     private ImageView recentPhoto;
     private Button selectImageButton;
@@ -66,11 +68,13 @@ public class profileDetails extends AppCompatActivity {
         progress = findViewById(R.id.progress);
         birthdateEditText = findViewById(R.id.birthdate);
         fullnameEditText = findViewById(R.id.fullname);
-        contactEditText = findViewById(R.id.contact);
         genderGroup = findViewById(R.id.genderGroup);
         recentPhoto = findViewById(R.id.recentPhoto);
         selectImageButton = findViewById(R.id.selectImageButton);
         submitDetailsButton = findViewById(R.id.submitDetailsButton);
+
+        // Check if the profile is already completed
+        checkProfileCompletion();
 
         // Set up the calendar and date picker dialog
         calendar = Calendar.getInstance();
@@ -142,16 +146,17 @@ public class profileDetails extends AppCompatActivity {
     private void submitUserDetails() {
         String fullName = fullnameEditText.getText().toString();
         String birthdate = birthdateEditText.getText().toString();
-        String contact = contactEditText.getText().toString();
         int selectedId = genderGroup.getCheckedRadioButtonId();
         RadioButton selectedRadioButton = findViewById(selectedId);
         String gender = selectedRadioButton != null ? selectedRadioButton.getText().toString() : "";
 
-        if (TextUtils.isEmpty(fullName) || TextUtils.isEmpty(birthdate) || TextUtils.isEmpty(contact) || recentPhoto.getDrawable() == null) {
+        // Validate inputs
+        if (TextUtils.isEmpty(fullName) || TextUtils.isEmpty(birthdate) || recentPhoto.getDrawable() == null) {
             Toast.makeText(this, "All fields are required, including the profile photo.", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Validate age
         String[] dateParts = birthdate.split("/");
         if (dateParts.length == 3) {
             int birthYear = Integer.parseInt(dateParts[2]);
@@ -163,40 +168,68 @@ public class profileDetails extends AppCompatActivity {
             }
         }
 
+        // Check if imageUri is not null
         if (imageUri == null) {
             Toast.makeText(profileDetails.this, "Please select a profile photo.", Toast.LENGTH_SHORT).show();
-        } else {
-            progress.setVisibility(View.VISIBLE);
-            StorageReference fileRef = mStorage.child("profile_pictures/" + mAuth.getCurrentUser().getUid() + ".jpg");
-            fileRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                String imageUrl = uri.toString();
-                Map<String, Object> userDetails = new HashMap<>();
-                userDetails.put("fullName", fullName);
-                userDetails.put("birthDate", birthdate);
-                userDetails.put("contact", contact);
-                userDetails.put("gender", gender);
-                userDetails.put("photoUrl", imageUrl);
-
-                mDatabase.child(mAuth.getCurrentUser().getUid()).updateChildren(userDetails)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                SharedPreferences preferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
-                                SharedPreferences.Editor editor = preferences.edit();
-                                editor.putBoolean("profile_completed", true);
-                                editor.apply();
-
-                                Toast.makeText(profileDetails.this, "Details submitted successfully!", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(profileDetails.this, MainActivity.class);
-                                startActivity(intent);
-                            } else {
-                                Toast.makeText(profileDetails.this, "Failed to submit details.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            })).addOnFailureListener(e -> Toast.makeText(profileDetails.this, "Failed to upload image.", Toast.LENGTH_SHORT).show());
+            return;
         }
+
+        // Show progress
+        progress.setVisibility(View.VISIBLE);
+
+        // Upload the image to Firebase Storage
+        StorageReference fileRef = mStorage.child("profile_pictures/" + mAuth.getCurrentUser().getUid() + ".jpg");
+        fileRef.putFile(imageUri).addOnSuccessListener(taskSnapshot ->
+                fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String imageUrl = uri.toString();
+
+                    // Prepare user details
+                    Map<String, Object> userDetails = new HashMap<>();
+                    userDetails.put("fullName", fullName);
+                    userDetails.put("birthDate", birthdate);
+                    userDetails.put("gender", gender);
+                    userDetails.put("photoUrl", imageUrl);
+
+                    // Update user details in Firebase Realtime Database
+                    mDatabase.child(mAuth.getCurrentUser().getUid()).updateChildren(userDetails)
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    // Redirect to MainActivity
+                                    Toast.makeText(profileDetails.this, "Details submitted successfully!", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(profileDetails.this, phone_verification.class));
+                                    finish();
+                                } else {
+                                    Toast.makeText(profileDetails.this, "Failed to submit details.", Toast.LENGTH_SHORT).show();
+                                }
+                                progress.setVisibility(View.GONE);
+                            });
+                })
+        ).addOnFailureListener(e -> {
+            progress.setVisibility(View.GONE);
+            Toast.makeText(profileDetails.this, "Failed to upload image.", Toast.LENGTH_SHORT).show();
+        });
     }
 
+    private void checkProfileCompletion() {
+        String userId = mAuth.getCurrentUser().getUid();
+        mDatabase.child(userId).child("profile_completed").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Boolean isProfileCompleted = dataSnapshot.getValue(Boolean.class);
 
+                if (Boolean.TRUE.equals(isProfileCompleted)) {
+                    // Redirect to MainActivity if the profile is already completed
+                    startActivity(new Intent(profileDetails.this, MainActivity.class));
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(profileDetails.this, "Failed to check profile completion status.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     private Uri getImageUriFromBitmap(Bitmap bitmap) {
         // Convert Bitmap to Uri

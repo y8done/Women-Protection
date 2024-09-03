@@ -12,6 +12,19 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+// settings.gradle.kts
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url = uri("https://maven.mapmyindia.com/repository/mapmyindia/")
+        }
+    }
+}
+
 
 rootProject.name = "Women Protection"
 include(":app")
